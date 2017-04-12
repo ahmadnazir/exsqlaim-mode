@@ -9,6 +9,8 @@
 (defconst exsqlaim/regexp-stmt-var-assign "^\\(@[^@ ]+\\)[ \t]*=[ \t]*\\(.*\\)$")
 
 ;; Inspired and modified from restclient.el: restclient-find-vars-before-point
+;;
+;;;###autoload
 (defun exsqlaim/find-vars-before-point ()
   (let ((vars nil)
         (bound (point)))
@@ -20,18 +22,23 @@
           (setq vars (cons (cons name (message value)) vars))))
       vars)))
 
+;;;###autoload
 (defun exsqlaim/get-vars ()
   (cons
    '(";"."\\p;") ;; echo the query to the terminal
    (exsqlaim/find-vars-before-point)))
 
 ;; Overriding the sql send region so that I can replace the query params
+;;
+;;;###autoload
 (defun sql-send-region (start end)
   "Send a region to the SQL process."
   (interactive "r")
   (sql-send-string (buffer-substring-no-properties start end)))
 
 ;; Modified the original function from sql.el
+;;
+;;;###autoload
 (defun exsqlaim/sql-send-region (start end)
   "Send a region to the SQL process."
   (interactive "r")
@@ -41,6 +48,8 @@
   )
 
 ;; Modified the original function from sql.el
+;;
+;;;###autoload
 (defun exsqlaim/sql-send-paragraph ()
   "Send the current paragraph to the SQL process."
   (interactive)
@@ -59,6 +68,5 @@
               'sql-mode
               '(("@[^@= \n\"'\.]+" . font-lock-variable-name-face)))
              ))
-
 
 (provide 'exsqlaim)
