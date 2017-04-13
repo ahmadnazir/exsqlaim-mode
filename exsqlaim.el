@@ -1,3 +1,11 @@
+;;; -*- lexical-binding: t;-*-
+
+;;; exsqlaim.el --- Exsqlaim : Use variables in sql queries
+
+;; Author: Ahmad Nazir Raja <ahmadnazir@gmail.com>
+;; Version: 0.0.1
+
+(require 's)
 (require 'sql)
 
 ;; Variables can be defined as:
@@ -70,3 +78,5 @@
              ))
 
 (provide 'exsqlaim)
+
+;;; exsqlaim.el ends here
