@@ -1,3 +1,11 @@
+;;; -*- lexical-binding: t;-*-
+
+;;; exsqlaim.el --- Exsqlaim : Use variables in sql queries
+
+;; Author: Ahmad Nazir Raja <ahmadnazir@gmail.com>
+;; Version: 0.0.1
+
+(require 's)
 (require 'sql)
 
 ;; Variables can be defined as:
@@ -28,30 +36,22 @@
    '(";"."\\p;") ;; echo the query to the terminal
    (exsqlaim/find-vars-before-point)))
 
-;; Overriding the sql send region so that I can replace the query params
-;;
 ;;;###autoload
-(defun sql-send-region (start end)
-  "Send a region to the SQL process."
+(defun exsqlaim/get-raw-query (start end)
+  "Get the raw query with variables"
   (interactive "r")
-  (sql-send-string (buffer-substring-no-properties start end)))
+  (buffer-substring-no-properties start end))
+
+;;;###autoload
+(defun exsqlaim/build-query (query vars)
+  "Build the sql query using defined variables"
+  (s-replace-all vars query))
 
 ;; Modified the original function from sql.el
 ;;
 ;;;###autoload
-(defun exsqlaim/sql-send-region (start end)
-  "Send a region to the SQL process."
-  (interactive "r")
-  (sql-send-string
-   (s-replace-all (exsqlaim/get-vars)
-                  (buffer-substring-no-properties start end)))
-  )
-
-;; Modified the original function from sql.el
-;;
-;;;###autoload
-(defun exsqlaim/sql-send-paragraph ()
-  "Send the current paragraph to the SQL process."
+(defun exsqlaim/build-query-at-point()
+  "Build the query to be executed at point"
   (interactive)
   (let ((start (save-excursion
                  (backward-paragraph)
@@ -59,7 +59,15 @@
         (end (save-excursion
                (forward-paragraph)
                (point))))
-    (exsqlaim/sql-send-region start end)))
+    (exsqlaim/build-query (exsqlaim/get-raw-query start end) (exsqlaim/get-vars))
+    ))
+
+;;;###autoload
+(defun exsqlaim/send ()
+  "Build a query at point and send it to the sql process"
+  (interactive)
+  (sql-send-string (exsqlaim/build-query-at-point))
+  )
 
 ;; Highlight variables
 (add-hook 'sql-mode-hook
@@ -70,3 +78,5 @@
              ))
 
 (provide 'exsqlaim)
+
+;;; exsqlaim.el ends here
