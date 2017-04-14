@@ -1,9 +1,6 @@
 Feature: Using variables in sql
-  As a role
-  I need this feature
-  So that I get some value
 
-Scenario: Getting alist of variables
+Scenario: Get the query to be executed at point
   When I insert:
   """
   @userId = 1234

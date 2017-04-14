@@ -27,7 +27,7 @@
       (while (search-forward-regexp exsqlaim/regexp-stmt-var-assign bound t)
         (let ((name (match-string-no-properties 1))
               (value (match-string-no-properties 2)))
-          (setq vars (cons (cons name (message value)) vars))))
+          (setq vars (cons (cons name value) vars))))
       vars)))
 
 ;;;###autoload
@@ -52,7 +52,6 @@
 ;;;###autoload
 (defun exsqlaim/build-query-at-point()
   "Build the query to be executed at point"
-  (interactive)
   (let ((start (save-excursion
                  (backward-paragraph)
                  (point)))
