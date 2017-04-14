@@ -1,11 +1,15 @@
-Feature: Do Some things
-  In order to do something
-  As a user
-  I want to do something
+Feature: Using variables in sql
+  As a role
+  I need this feature
+  So that I get some value
 
-  Scenario: Do Something
-    Given I have "something"
-    When I have "something"
-    Then I should have "something"
-    And I should have "something"
-    But I should not have "something"
+Scenario: Getting alist of variables
+  When I insert:
+  """
+  @userId = 1234
+
+  SELECT name FROM users WHERE id = @userId;
+  """
+  And I go to end of buffer
+  And I build the query and insert it
+  Then I should see "SELECT name FROM users WHERE id = 1234\p;"

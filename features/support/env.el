@@ -22,8 +22,12 @@
  )
 
 (Before
- ;; Before each scenario is run
- )
+ (switch-to-buffer
+  (get-buffer-create "*testing-buffer*"))
+ (erase-buffer)
+ (transient-mark-mode 1)
+ (cua-mode 0)
+ (deactivate-mark))
 
 (After
  ;; After each scenario is run
