@@ -2,7 +2,7 @@
 ;; files in this directory whose names end with "-steps.el" will be
 ;; loaded automatically by Ecukes.
 
-(Given "^I build the query and insert it"
-  (lambda ()
-    (insert (exsqlaim/build-query-at-point))
-    ))
+;; (Given "^I build the query and insert it"
+;;   (lambda ()
+;;     (insert (exsqlaim/build-query-at-point))
+;;     ))

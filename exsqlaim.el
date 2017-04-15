@@ -62,19 +62,49 @@
     ))
 
 ;;;###autoload
+(defun exsqlaim/update-query-at-point ()
+  "Update the query at point with the values from the variables"
+  (interactive)
+  (let ((start (save-excursion
+                 (backward-paragraph)
+                 (point)))
+        (end (save-excursion
+               (forward-paragraph)
+               (point))))
+    (let ((query (exsqlaim/build-query-at-point)))
+      (kill-region start end)
+      (insert query))))
+
+;;;###autoload
 (defun exsqlaim/send ()
   "Build a query at point and send it to the sql process"
   (interactive)
   (sql-send-string (exsqlaim/build-query-at-point))
   )
 
-;; Highlight variables
-(add-hook 'sql-mode-hook
-          '(lambda ()
-             (font-lock-add-keywords
-              'sql-mode
-              '(("@[^@= \n\"'\.]+" . font-lock-variable-name-face)))
-             ))
+;; Enable exsqlaim mode with sql mode
+(add-hook 'sql-mode-hook 'exsqlaim-mode)
+
+;; Minor Mode
+(defvar exsqlaim-mode-map (make-sparse-keymap)
+  "exsqlaim-mode keymap")
+
+(define-key exsqlaim-mode-map
+  (kbd "C-c C-c") 'exsqlaim/send)
+
+(define-key exsqlaim-mode-map
+  (kbd "C-c C-i") 'exsqlaim/update-query-at-point)
+
+(define-minor-mode exsqlaim-mode
+  "Exsqlaim mode" nil " Exsqlaim" exsqlaim-mode-map
+  (if exsqlaim-mode
+      ;; Highlight variables
+      (font-lock-add-keywords
+       'sql-mode
+       '(("@[^@= \n\"'\.]+" . font-lock-variable-name-face)))
+    (message "Exsqlaim minor mode disabled"))
+  )
+
 
 (provide 'exsqlaim)
 
