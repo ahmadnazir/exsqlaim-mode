@@ -13,7 +13,7 @@
 
 ;; Ensure that we don't load old byte-compiled versions
 (let ((load-prefer-newer t))
-  (require 'exsqlaim)
+  (require 'exsqlaim-mode)
   (require 'espuds)
   (require 'ert))
 

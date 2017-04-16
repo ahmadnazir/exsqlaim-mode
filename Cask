@@ -1,7 +1,7 @@
 (source gnu)
 (source melpa)
 
-(package-file "exsqlaim.el")
+(package-file "exsqlaim-mode.el")
 
 (depends-on "s")
 (depends-on "sql")
