@@ -27,7 +27,9 @@
  (erase-buffer)
  (transient-mark-mode 1)
  (cua-mode 0)
- (deactivate-mark))
+ (deactivate-mark)
+ (exsqlaim-mode 0)
+ )
 
 (After
  ;; After each scenario is run

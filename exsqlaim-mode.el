@@ -103,22 +103,27 @@ Argument VARS Map of variables and values."
 (defconst exsqlaim-mode--regexp-var "@[^@= \n\"'\.]+")
 
 ;; TODO: refactor to remove duplicate code
-(defun exsqlaim-mode--fontify (enabled)
+(defun exsqlaim-mode--fontify (mode)
   "Fontiy buffer.
-Argument ENABLED Flag that tells mode is enabled or not."
-  (if enabled
+Argument MODE Major mode for which the font-lock keywords need to be updated."
+  (if (bound-and-true-p exsqlaim-mode)
       (progn ()
-             (font-lock-add-keywords nil `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
+             (font-lock-add-keywords mode `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
              (font-lock-fontify-buffer))
     (progn ()
-           (font-lock-remove-keywords nil `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
+           (font-lock-remove-keywords mode `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
            (font-lock-fontify-buffer))
     ))
 
+(add-hook 'exsqlaim-mode-hook
+          (lambda()
+            (exsqlaim-mode--fontify nil)
+            ))
+
+;;;###autoload
 (define-minor-mode exsqlaim-mode
   "Exsqlaim mode" nil " Exsqlaim" exsqlaim-mode-map
-  (exsqlaim-mode--fontify exsqlaim-mode)
-  )
+  (exsqlaim-mode--fontify 'sql-mode))
 
 (provide 'exsqlaim-mode)
 
