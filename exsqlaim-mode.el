@@ -31,8 +31,6 @@
 (defconst exsqlaim-mode--regexp-stmt-var-assign "^\\(@[^@ ]+\\)[ \t]*=[ \t]*\\(.*\\)$")
 
 ;; Inspired and modified from restclient.el: restclient-find-vars-before-point
-;;
-;;;###autoload
 (defun exsqlaim-mode--find-vars-before-point ()
   "Find the mapping between variables and their values before point."
   (let ((vars nil)
@@ -45,14 +43,12 @@
           (setq vars (cons (cons name value) vars))))
       vars)))
 
-;;;###autoload
 (defun exsqlaim-mode--get-vars ()
   "Get a map of all variables and values."
   (cons
    '(";"."\\p;") ;; echo the query to the terminal
    (exsqlaim-mode--find-vars-before-point)))
 
-;;;###autoload
 (defun exsqlaim-mode--get-raw-query (start end)
   "Get the raw query with variables.
 Argument START Point where the query starts.
@@ -60,15 +56,11 @@ Argument END Point where the query ends."
   (interactive "r")
   (buffer-substring-no-properties start end))
 
-;;;###autoload
 (defun exsqlaim-mode--build-query (query vars)
   "Build the sql QUERY using defined variables.
 Argument VARS Map of variables and values."
   (s-replace-all vars query))
 
-;; Modified the original function from sql.el
-;;
-;;;###autoload
 (defun exsqlaim-mode--build-query-at-point()
   "Build the query to be executed at point"
   (let ((start (save-excursion
@@ -80,7 +72,6 @@ Argument VARS Map of variables and values."
     (exsqlaim-mode--build-query (exsqlaim-mode--get-raw-query start end) (exsqlaim-mode--get-vars))
     ))
 
-;;;###autoload
 (defun exsqlaim-mode--update-query-at-point ()
   "Update the query at point with the values from the variables."
   (interactive)
@@ -94,7 +85,6 @@ Argument VARS Map of variables and values."
       (kill-region start end)
       (insert query))))
 
-;;;###autoload
 (defun exsqlaim-mode--send ()
   "Build a query at point and send it to the sql process."
   (interactive)
