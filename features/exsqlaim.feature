@@ -19,6 +19,6 @@ Scenario: Update query at point
   SELECT name FROM users WHERE id = @userId;
   """
   And I go to end of buffer
-  And I turn on sql-mode
+  And I turn on exqlaim-mode
   And I press "C-c C-i"
   Then I should see "SELECT name FROM users WHERE id = 1234\p;"
