@@ -1,5 +1,4 @@
-;;; exsqlaim-mode.el --- Use variables inside sql queries
-;;; -*- lexical-binding: t;-*-
+;;; exsqlaim-mode.el --- Use variables inside sql queries -*- lexical-binding: t -*-
 
 ;; Author: Ahmad Nazir Raja <ahmadnazir@gmail.com>
 ;; Version: 0.0.1
