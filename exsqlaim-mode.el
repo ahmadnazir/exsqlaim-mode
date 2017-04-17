@@ -103,9 +103,10 @@ Argument VARS Map of variables and values."
 (defconst exsqlaim-mode--regexp-var "@[^@= \n\"'\.]+")
 
 ;; TODO: refactor to remove duplicate code
-(defun exsqlaim-mode--fontify ()
-  "Fontiy buffer."
-  (if exsqlaim-mode
+(defun exsqlaim-mode--fontify (enabled)
+  "Fontiy buffer.
+Argument ENABLED Flag that tells mode is enabled or not."
+  (if enabled
       (progn ()
              (font-lock-add-keywords nil `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
              (font-lock-fontify-buffer))
@@ -116,7 +117,7 @@ Argument VARS Map of variables and values."
 
 (define-minor-mode exsqlaim-mode
   "Exsqlaim mode" nil " Exsqlaim" exsqlaim-mode-map
-  (exsqlaim-mode--fontify)
+  (exsqlaim-mode--fontify exsqlaim-mode)
   )
 
 (provide 'exsqlaim-mode)
