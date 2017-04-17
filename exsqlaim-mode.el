@@ -90,9 +90,6 @@ Argument VARS Map of variables and values."
   (sql-send-string (exsqlaim-mode--build-query-at-point))
   )
 
-;; Enable exsqlaim mode with sql mode
-(add-hook 'sql-mode-hook 'exsqlaim-mode)
-
 ;; Minor Mode
 (defvar exsqlaim-mode-map (make-sparse-keymap)
   "Exsqlaim-mode keymap.")
@@ -103,14 +100,23 @@ Argument VARS Map of variables and values."
 (define-key exsqlaim-mode-map
   (kbd "C-c C-i") 'exsqlaim-mode--update-query-at-point)
 
+(defconst exsqlaim-mode--regexp-var "@[^@= \n\"'\.]+")
+
+;; TODO: refactor to remove duplicate code
+(defun exsqlaim-mode--fontify ()
+  "Fontiy buffer."
+  (if exsqlaim-mode
+      (progn ()
+             (font-lock-add-keywords nil `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
+             (font-lock-fontify-buffer))
+    (progn ()
+           (font-lock-remove-keywords nil `((,exsqlaim-mode--regexp-var 0 font-lock-variable-name-face t)))
+           (font-lock-fontify-buffer))
+    ))
+
 (define-minor-mode exsqlaim-mode
   "Exsqlaim mode" nil " Exsqlaim" exsqlaim-mode-map
-  (if exsqlaim-mode
-      ;; Highlight variables
-      (font-lock-add-keywords
-       'sql-mode
-       '(("@[^@= \n\"'\.]+" . font-lock-variable-name-face)))
-    (message "Exsqlaim minor mode disabled"))
+  (exsqlaim-mode--fontify)
   )
 
 (provide 'exsqlaim-mode)
