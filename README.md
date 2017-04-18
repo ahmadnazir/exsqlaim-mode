@@ -1,6 +1,7 @@
 # exsqlaim-mode
 
 [![Build Status](https://travis-ci.org/ahmadnazir/exsqlaim-mode.svg?branch=master)](https://travis-ci.org/ahmadnazir/exsqlaim-mode)
+[![MELPA](https://melpa.org/packages/exsqlaim-mode-badge.svg)](https://melpa.org/#/exsqlaim-mode)
 
 Emacs minor mode for supporting the use of variables inside sql queries.
 
