@@ -33,7 +33,6 @@ Scenario: Font-lock should be set with exsqlaim-mode is turned on and off
   And I go to word "userId"
   Then current point should have no face
   When I turn on sql-mode
-  When I turn off minor mode exsqlaim-mode
   Then current point should have no face
   When I turn on exsqlaim-mode
   Then current point should have the font-lock-variable-name-face face
