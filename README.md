@@ -11,7 +11,11 @@ This project is inspired from [restclient-mode][restclient-mode]
 `exsqlaim-mode` is a minor mode for `sql-mode`. It can be enabled when `sql-mode` is enabled:
 
 ```
-(add-hook 'sql-mode-hook 'exsqlaim-mode)
+(add-hook 'sql-mode-hook
+            (lambda()
+              (exsqlaim-mode--fontify 'sql-mode)
+              (exsqlaim-mode)
+              ))
 ```
 
 ## Example
