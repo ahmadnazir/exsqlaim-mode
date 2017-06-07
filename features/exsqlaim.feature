@@ -17,6 +17,7 @@ Scenario: Update query at point
   @userId = 1234
 
   SELECT name FROM users WHERE id = @userId;
+
   """
   And I go to end of buffer
   And I turn on exsqlaim-mode
@@ -38,3 +39,14 @@ Scenario: Font-lock should be set with exsqlaim-mode is turned on and off
   Then current point should have the font-lock-variable-name-face face
   When I turn off minor mode exsqlaim-mode
   Then current point should have no face
+
+Scenario: Update query at point (semi-colon replacement)
+  When I insert:
+  """
+  SELECT "test;test" FROM dual;
+
+  """
+  And I go to end of buffer
+  And I turn on exsqlaim-mode
+  And I press "C-c C-i"
+  Then I should see "SELECT "test;test" FROM dual\p;"
