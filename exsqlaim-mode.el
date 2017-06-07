@@ -45,7 +45,7 @@
 (defun exsqlaim-mode--get-vars ()
   "Get a map of all variables and values."
   (cons
-   '(";"."\\p;") ;; echo the query to the terminal
+   '(";\n"."\\p;") ;; echo the query to the terminal
    (exsqlaim-mode--find-vars-before-point)))
 
 (defun exsqlaim-mode--get-raw-query (start end)
