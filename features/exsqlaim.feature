@@ -17,6 +17,7 @@ Scenario: Update query at point
   @userId = 1234
 
   SELECT name FROM users WHERE id = @userId;
+
   """
   And I go to end of buffer
   And I turn on exsqlaim-mode
