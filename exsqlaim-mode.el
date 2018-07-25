@@ -24,6 +24,7 @@
 
 (require 's)
 (require 'sql)
+(require 'request)
 
 ;;; Code:
 
@@ -49,7 +50,7 @@
    (exsqlaim-mode--find-vars-before-point))
   )
 
-(defun exsqlaim-mode--get-raw-query (start end)
+(defun exsqlaim-mode--get-string (start end)
   "Get the raw query with variables.
 Argument START Point where the query starts.
 Argument END Point where the query ends."
@@ -61,7 +62,7 @@ Argument END Point where the query ends."
 Argument VARS Map of variables and values."
   (s-replace-all vars query))
 
-(defun exsqlaim-mode--build-query-at-point()
+(defun exsqlaim-mode--string-at-point()
   "Build the query to be executed at point"
   (let ((start (save-excursion
                  (backward-paragraph)
@@ -69,8 +70,19 @@ Argument VARS Map of variables and values."
         (end (save-excursion
                (forward-paragraph)
                (point))))
-    (exsqlaim-mode--build-query (exsqlaim-mode--get-raw-query start end) (exsqlaim-mode--get-vars))
+    (exsqlaim-mode--get-string start end)))
+
+(defun exsqlaim-mode--build-query-at-point()
+  "Build the query to be executed at point i.e. the query with the parameters."
+  (let ((start (save-excursion
+                 (backward-paragraph)
+                 (point)))
+        (end (save-excursion
+               (forward-paragraph)
+               (point))))
+    (exsqlaim-mode--build-query (exsqlaim-mode--string-at-point) (exsqlaim-mode--get-vars))
     ))
+
 
 (defun exsqlaim-mode--update-query-at-point ()
   "Update the query at point with the values from the variables."
@@ -85,10 +97,40 @@ Argument VARS Map of variables and values."
       (kill-region start end)
       (insert query))))
 
-(defun exsqlaim-mode--send ()
+(defun exsqlaim-mode--pine-build-at-point(fn)
+  "Build a query for the pine expression at point."
+  (interactive)
+  (let ((expression (s-trim (exsqlaim-mode--string-at-point))))
+    (request
+     "http://localhost:3000/pine/build"
+     :type "POST"
+     :data (json-encode `(("expression" . ,expression)))
+     :headers '(("Content-Type" . "application/json"))
+     ;; :parser 'json-read
+     :parser 'buffer-string
+     :success (function* (lambda (&key data &allow-other-keys)
+                           (when data
+                             (apply fn `(,data))
+                             (message data)
+                             )))
+     )))
+
+(defun exsqlaim-mode--send (query)
   "Build a query at point and send it to the sql process."
   (interactive)
-  (sql-send-string (exsqlaim-mode--build-query-at-point))
+  (sql-send-string query)
+  )
+
+(defun exsqlaim-mode--eval-pine-expression-at-point()
+  "Evaluate a pine expression at point"
+  (interactive)
+  (exsqlaim-mode--pine-build-at-point 'exsqlaim-mode--send)
+  )
+
+(defun exsqlaim-mode--send-at-point ()
+  "Build a query at point and send it to the sql process."
+  (interactive)
+  (exsqlaim-mode--send (exsqlaim-mode--build-query-at-point))
   )
 
 ;; Minor Mode
@@ -96,7 +138,7 @@ Argument VARS Map of variables and values."
   "Exsqlaim-mode keymap.")
 
 (define-key exsqlaim-mode-map
-  (kbd "C-c C-c") 'exsqlaim-mode--send)
+  (kbd "C-c C-c") 'exsqlaim-mode--send-at-point)
 
 (define-key exsqlaim-mode-map
   (kbd "C-c C-i") 'exsqlaim-mode--update-query-at-point)
