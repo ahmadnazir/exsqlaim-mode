@@ -30,6 +30,9 @@
 
 (defconst exsqlaim-mode--regexp-stmt-var-assign "^\\(@[^@ ]+\\)[ \t]*=[ \t]*\\(.*\\)$")
 
+(defcustom exsqlaim-mode--pine-service-endpoint "http://localhost:3000/pine/build"
+  "Endpoint for the pine service")
+
 ;; Inspired and modified from restclient.el: restclient-find-vars-before-point
 (defun exsqlaim-mode--find-vars-before-point ()
   "Find the mapping between variables and their values before point."
@@ -97,12 +100,11 @@ Argument VARS Map of variables and values."
       (kill-region start end)
       (insert query))))
 
-(defun exsqlaim-mode--pine-build-at-point(fn)
+(defun exsqlaim-mode--pine-build-and-apply-fn-at-point(fn)
   "Build a query for the pine expression at point."
   (interactive)
   (let ((expression (s-trim (exsqlaim-mode--string-at-point))))
-    (request
-     "http://localhost:3000/pine/build"
+    (request exsqlaim-mode--pine-service-endpoint
      :type "POST"
      :data (json-encode `(("expression" . ,expression)))
      :headers '(("Content-Type" . "application/json"))
@@ -124,7 +126,7 @@ Argument VARS Map of variables and values."
 (defun exsqlaim-mode--eval-pine-expression-at-point()
   "Evaluate a pine expression at point"
   (interactive)
-  (exsqlaim-mode--pine-build-at-point 'exsqlaim-mode--send)
+  (exsqlaim-mode--pine-build-and-apply-fn-at-point 'exsqlaim-mode--send)
   )
 
 (defun exsqlaim-mode--send-at-point ()

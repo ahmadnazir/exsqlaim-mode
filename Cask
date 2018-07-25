@@ -5,6 +5,8 @@
 
 (depends-on "s")
 (depends-on "sql")
+;; for pine
+(depends-on "request")
 
 (development
  (depends-on "f")
